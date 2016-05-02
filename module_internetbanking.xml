@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_internetbanking" default="compile.module.internetbanking">
+  <dirname property="module.internetbanking.basedir" file="${ant.file.module_internetbanking}"/>
+  
+  <property name="module.jdk.home.internetbanking" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.internetbanking" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.internetbanking" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.internetbanking" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="internetbanking.output.dir" value="${module.internetbanking.basedir}/out/production/INTERNETBANKING"/>
+  <property name="internetbanking.testoutput.dir" value="${module.internetbanking.basedir}/out/test/INTERNETBANKING"/>
+  
+  <path id="internetbanking.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="internetbanking.module.production.classpath">
+    <path refid="${module.jdk.classpath.internetbanking}"/>
+    <path refid="library.javax.servlet.classpath"/>
+  </path>
+  
+  <path id="internetbanking.runtime.production.module.classpath">
+    <pathelement location="${internetbanking.output.dir}"/>
+    <path refid="library.javax.servlet.classpath"/>
+  </path>
+  
+  <path id="internetbanking.module.classpath">
+    <path refid="${module.jdk.classpath.internetbanking}"/>
+    <pathelement location="${internetbanking.output.dir}"/>
+    <path refid="library.javax.servlet.classpath"/>
+  </path>
+  
+  <path id="internetbanking.runtime.module.classpath">
+    <pathelement location="${internetbanking.testoutput.dir}"/>
+    <pathelement location="${internetbanking.output.dir}"/>
+    <path refid="library.javax.servlet.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.internetbanking">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.internetbanking">
+    <patternset refid="excluded.from.module.internetbanking"/>
+  </patternset>
+  
+  <path id="internetbanking.module.sourcepath">
+    <dirset dir="${module.internetbanking.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.internetbanking" depends="compile.module.internetbanking.production,compile.module.internetbanking.tests" description="Compile module INTERNETBANKING"/>
+  
+  <target name="compile.module.internetbanking.production" depends="register.custom.compilers" description="Compile module INTERNETBANKING; production classes">
+    <mkdir dir="${internetbanking.output.dir}"/>
+    <javac2 destdir="${internetbanking.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.internetbanking}/javac">
+      <compilerarg line="${compiler.args.internetbanking}"/>
+      <bootclasspath refid="internetbanking.module.bootclasspath"/>
+      <classpath refid="internetbanking.module.production.classpath"/>
+      <src refid="internetbanking.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.internetbanking"/>
+    </javac2>
+    
+    <copy todir="${internetbanking.output.dir}">
+      <fileset dir="${module.internetbanking.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.internetbanking.tests" depends="register.custom.compilers,compile.module.internetbanking.production" description="compile module INTERNETBANKING; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.internetbanking" description="cleanup module">
+    <delete dir="${internetbanking.output.dir}"/>
+    <delete dir="${internetbanking.testoutput.dir}"/>
+  </target>
+</project>
